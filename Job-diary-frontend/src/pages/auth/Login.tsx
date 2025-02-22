@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Link, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../redux/hooks/hooks";
-import { loginUser } from "../redux/slices/authSlice"; // Import the login action
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { loginUser } from "../../redux/slices/authSlice";
 
 const Login = () => {
   const dispatch = useAppDispatch();

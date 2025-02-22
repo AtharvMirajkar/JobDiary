@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Link, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { signupUser } from "../../redux/slices/authSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
 
 const Signup = () => {
+  const dispatch = useAppDispatch();
+  const { loading, error, isAuthenticated } = useAppSelector(
+    (state) => state.auth
+  );
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -11,6 +18,11 @@ const Signup = () => {
 
   const handleSignup = async () => {
     // Placeholder function for signup
+    try {
+      await dispatch(signupUser({ name, email, password })).unwrap();
+    } catch (err) {
+      console.error("Login failed", err); // Log the error
+    }
     console.log({ name, email, password });
   };
 
