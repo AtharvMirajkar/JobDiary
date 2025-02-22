@@ -4,15 +4,15 @@ import {
   getJobsByUser,
   getJobById,
   updateJob,
-  deleteJob,
+  deleteJob, 
 } from "../controllers/jobController.js";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+router.post("/create", authMiddleware, createJob);
 
-router.post("/", createJob);
-
-router.get("/user/:userId", getJobsByUser);
+router.get("/user", authMiddleware, getJobsByUser);
 
 router.get("/:id", getJobById);
 

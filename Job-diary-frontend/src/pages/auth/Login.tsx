@@ -18,6 +18,7 @@ const Login = () => {
     if (email && password) {
       try {
         await dispatch(loginUser({ email, password })).unwrap();
+        navigate("/dashboard");
       } catch (err) {
         console.error("Login failed", err); // Log the error
       }
@@ -32,9 +33,9 @@ const Login = () => {
   };
 
   // Redirect user after successful login
-  if (isAuthenticated) {
-    navigate("/dashboard");
-  }
+  // if (isAuthenticated) {
+  //   navigate("/dashboard");
+  // }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

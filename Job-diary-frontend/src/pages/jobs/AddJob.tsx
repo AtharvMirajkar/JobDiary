@@ -1,8 +1,23 @@
 import React, { useState } from "react";
-import { TextField, Button, MenuItem } from "@mui/material";
+import { TextField, Button, MenuItem, CircularProgress } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/hooks";
+import { addJob } from "../../redux/slices/jobSlice";
 
-const AddJob = () => {
-  const [jobDetails, setJobDetails] = useState({
+interface JobDetails {
+  platform: string;
+  companyName: string;
+  role: string;
+  package?: string;
+  location?: string;
+  applicationDate?: string;
+  status: "Applied" | "Interviewing" | "Offered" | "Rejected" | "Accepted";
+  notes?: string;
+}
+
+const AddJob: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.jobs);
+  const [jobDetails, setJobDetails] = useState<JobDetails>({
     platform: "",
     companyName: "",
     role: "",
@@ -20,8 +35,7 @@ const AddJob = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Job Details Submitted:", jobDetails);
-    // Add API call logic to save job details
+    dispatch(addJob(jobDetails));
   };
 
   return (
@@ -30,93 +44,116 @@ const AddJob = () => {
         Add Job Application
       </h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <TextField
-          label="Platform"
-          name="platform"
-          size="small"
-          fullWidth
-          required
-          value={jobDetails.platform}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Company Name"
-          name="companyName"
-          size="small"
-          fullWidth
-          required
-          value={jobDetails.companyName}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Role"
-          name="role"
-          size="small"
-          fullWidth
-          required
-          value={jobDetails.role}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Package"
-          name="package"
-          size="small"
-          fullWidth
-          value={jobDetails.package}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Location"
-          name="location"
-          size="small"
-          fullWidth
-          value={jobDetails.location}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Application Date"
-          name="applicationDate"
-          size="small"
-          type="date"
-          InputLabelProps={{ shrink: true }}
-          fullWidth
-          value={jobDetails.applicationDate}
-          onChange={handleChange}
-        />
-        <TextField
-          label="Status"
-          name="status"
-          size="small"
-          select
-          fullWidth
-          value={jobDetails.status}
-          onChange={handleChange}
-        >
-          {["Applied", "Interviewing", "Offered", "Rejected", "Accepted"].map(
-            (status) => (
-              <MenuItem key={status} value={status}>
-                {status}
-              </MenuItem>
-            )
-          )}
-        </TextField>
-        <TextField
-          label="Notes"
-          name="notes"
-          size="small"
-          multiline
-          rows={4}
-          fullWidth
-          value={jobDetails.notes}
-          onChange={handleChange}
-        />
+        <div>
+          <label className="block text-gray-700">Platform</label>
+          <TextField
+            name="platform"
+            size="small"
+            fullWidth
+            required
+            placeholder="For example LinkedIn"
+            value={jobDetails.platform}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Company Name</label>
+          <TextField
+            name="companyName"
+            size="small"
+            fullWidth
+            required
+            placeholder="For example Google"
+            value={jobDetails.companyName}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Role</label>
+          <TextField
+            name="role"
+            size="small"
+            fullWidth
+            required
+            placeholder="For example Software Engineer"
+            value={jobDetails.role}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Package</label>
+          <TextField
+            name="package"
+            size="small"
+            fullWidth
+            placeholder="For example $100,000"
+            value={jobDetails.package}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Location</label>
+          <TextField
+            name="location"
+            size="small"
+            fullWidth
+            placeholder="For example New York"
+            value={jobDetails.location}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Application Date</label>
+          <TextField
+            name="applicationDate"
+            size="small"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            fullWidth
+            value={jobDetails.applicationDate}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Status</label>
+          <TextField
+            name="status"
+            size="small"
+            select
+            fullWidth
+            value={jobDetails.status}
+            onChange={handleChange}
+          >
+            {["Applied", "Interviewing", "Offered", "Rejected", "Accepted"].map(
+              (status) => (
+                <MenuItem key={status} value={status}>
+                  {status}
+                </MenuItem>
+              )
+            )}
+          </TextField>
+        </div>
+        <div>
+          <label className="block text-gray-700">Notes</label>
+          <TextField
+            name="notes"
+            size="small"
+            multiline
+            rows={2}
+            fullWidth
+            placeholder="Additional details..."
+            value={jobDetails.notes}
+            onChange={handleChange}
+          />
+        </div>
         <Button
           type="submit"
           variant="contained"
           color="primary"
           className="w-full md:w-auto"
+          disabled={loading}
         >
-          Add Job
+          {loading ? <CircularProgress size={24} /> : "Add Job"}
         </Button>
       </form>
     </div>

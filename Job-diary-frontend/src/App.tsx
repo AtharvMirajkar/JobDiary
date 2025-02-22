@@ -7,6 +7,7 @@ import AddJob from "./pages/jobs/AddJob";
 import AppliedJobs from "./pages/jobs/AppliedJobs";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
+import Profile from "./pages/profile/Profile";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="add-job" element={<AddJob />} />
           <Route path="applied-jobs" element={<AppliedJobs />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </Router>

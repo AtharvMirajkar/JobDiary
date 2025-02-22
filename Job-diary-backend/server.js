@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
-// import jobRoutes from './routes/jobRoutes.js';
+import jobRoutes from './routes/jobRoutes.js';
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ app.use(express.json()); // Parse JSON data
 
 // Routes
 app.use('/api/users', userRoutes);
-// app.use('/api/jobs', jobRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

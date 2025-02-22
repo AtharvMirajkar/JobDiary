@@ -2,15 +2,23 @@ import Job from "../models/Job.js";
 
 // Create a new job application
 export const createJob = async (req, res) => {
+  console.log("Create Job API called ...........")
   try {
-    const { userId, platform, companyName, role, package: pkg, location, applicationDate, status, notes } = req.body;
+    if (!req.userId) {
+      return res.status(401).json({ message: "Not authorized, no user found" });
+    }
+  
+    const { platform, companyName, role, package: pkg, location, applicationDate, status, notes } = req.body;
+    console.log(req.body, "data <------")
 
-    if (!userId || !platform || !companyName || !role) {
+    console.log("User id --->", req.userId)
+   
+    if (!platform || !companyName || !role) {
       return res.status(400).json({ message: "Required fields are missing." });
     }
 
     const newJob = new Job({
-      userId,
+      userId: req.userId,
       platform,
       companyName,
       role,
@@ -24,6 +32,7 @@ export const createJob = async (req, res) => {
     const savedJob = await newJob.save();
     res.status(201).json(savedJob);
   } catch (error) {
+    console.log("Errror --->", error)
     res.status(500).json({ message: "Failed to create job application.", error });
   }
 };
@@ -31,7 +40,7 @@ export const createJob = async (req, res) => {
 // Get all job applications for a user
 export const getJobsByUser = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const  userId  = req.userId;
 
     const jobs = await Job.find({ userId });
     res.status(200).json(jobs);

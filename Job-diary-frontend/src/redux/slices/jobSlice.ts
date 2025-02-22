@@ -3,7 +3,7 @@ import axiosInstance from "../../utils/axiosInstance";
 
 // Define the type for a job
 export interface Job {
-  id?: string;
+  _id?: string;
   userId?: string;
   platform: string;
   companyName: string;
@@ -30,9 +30,9 @@ const initialState: JobState = {
 };
 
 // Async thunk to fetch jobs
-export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async (userId: string, { rejectWithValue }) => {
+export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async (_, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.get(`/jobs/user/${userId}`);
+    const response = await axiosInstance.get(`/jobs/user`); // Fetch jobs for the logged-in user
     return response.data; // Returns the list of jobs
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || "Failed to fetch jobs");
@@ -42,7 +42,7 @@ export const fetchJobs = createAsyncThunk("jobs/fetchJobs", async (userId: strin
 // Async thunk to add a job
 export const addJob = createAsyncThunk("jobs/addJob", async (jobData: Job, { rejectWithValue }) => {
   try {
-    const response = await axiosInstance.post("/jobs", jobData);
+    const response = await axiosInstance.post("/jobs/create", jobData);
     return response.data; // Returns the created job
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || "Failed to add job");
@@ -112,7 +112,7 @@ const jobSlice = createSlice({
       })
       .addCase(updateJob.fulfilled, (state, action: PayloadAction<Job>) => {
         state.loading = false;
-        const index = state.jobs.findIndex((job) => job.id === action.payload.id);
+        const index = state.jobs.findIndex((job) => job._id === action.payload._id);
         if (index !== -1) state.jobs[index] = action.payload;
       })
       .addCase(updateJob.rejected, (state, action: PayloadAction<string | undefined>) => {
@@ -126,7 +126,7 @@ const jobSlice = createSlice({
       })
       .addCase(deleteJob.fulfilled, (state, action: PayloadAction<string>) => {
         state.loading = false;
-        state.jobs = state.jobs.filter((job) => job.id !== action.payload);
+        state.jobs = state.jobs.filter((job) => job._id !== action.payload);
       })
       .addCase(deleteJob.rejected, (state, action: PayloadAction<string | undefined>) => {
         state.loading = false;
